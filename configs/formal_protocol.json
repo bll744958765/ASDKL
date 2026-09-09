@@ -1,0 +1,9 @@
+{
+  "datasets": ["synthetic", "pm25", "lucas_large", "california"],
+  "use_complete_datasets": true,
+  "seeds": [1042, 1052, 1062, 1072, 1082],
+  "split": {"train": 0.70, "validation": 0.10, "test": 0.20},
+  "training": {"maximum_epochs": 300, "batch_size": 64, "optimizer": "AdamW", "learning_rate": 0.003, "checkpoint_every": 25, "selection_metric": "validation MSE"},
+  "asdkl": {"training_neighbours": 64, "adaptive_frequencies": 64, "representation_width": 64, "mean_width": 128, "mean_residual_blocks": 6, "shared_target_conditioned_frequencies": true, "relative_relation_encoder": true, "spectral_regularization_weight": 0.1, "representation_kernel": "RBF", "base_space_kernel": "RBF", "synthetic_and_pm25_inference": "full residual covariance", "lucas_and_california_inference": "32-neighbour predictive-local residual inference"},
+  "epa_sparse_observation_study": {"training_percentages": [10, 20, 30, 40, 50, 60, 70], "fixed_test_percentage": 20, "validation_percentage": 10, "coordinate_grouped": true}
+}
