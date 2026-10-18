@@ -2,8 +2,8 @@
 
 The synthetic data are generated locally by `common/synthetic_dataset.py`. Download the three third-party datasets from their providers and place them at these paths (the loader lists the required columns):
 
-- `data/EPA_PM25_2023/raw/annual_conc_by_monitor_2023.csv` — U.S. EPA AirData 2023 annual concentration archive
-- `data/LUCAS 2018 TopSoil Dataset/OriginalSoilDataset.csv` — ESDAC/JRC LUCAS 2018 topsoil
-- `data/California_Housing/fetch_california_housing.csv` — California housing input table
+- `data/EPA_PM25_2023/raw/annual_conc_by_monitor_2023.csv` — download the **2023 annual concentration by monitor** ZIP from the [US EPA AirData files](https://aqs.epa.gov/aqsweb/airdata/download_files.html) and extract the CSV at this exact relative path. The loader selects parameter 88101, `PM25 Annual 2012`, `Quarterly Means of Daily Means`, at least 75% observation coverage, and one record per state/county/site/POC. Coordinates are latitude/longitude; `Arithmetic Mean` is the response; `Observation Percent` and `Valid Day Count` are covariates.
+- `data/LUCAS 2018 TopSoil Dataset/OriginalSoilDataset.csv` — obtain the 2018 topsoil CSV through the [European Soil Data Centre](https://esdac.jrc.ec.europa.eu/content/lucas-2018-topsoil-data). Keep the provider's original column names. The full-data experiment uses `TH_LONG`, `TH_LAT`, seven soil/environmental covariates and `OC`; it models `log1p(OC)` and drops incomplete required rows. Any ESDAC access terms remain with the provider.
+- `data/California_Housing/fetch_california_housing.csv` — create this file with `python scripts/prepare_california.py`, which calls scikit-learn's [public dataset loader](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html) and renames the response to `target`. The target unit is USD 100,000.
 
-Data are not redistributed in this code repository. Training, validation and test preprocessing is calculated from training records only.
+No dataset file is added by this code update. For a fresh reproduction, place provider data at the relative paths above. Training, validation and test preprocessing is calculated from training records only. The loader in `common/datasets.py` is the authoritative record of selected columns and filters; `common/data_loader.py` records the split and scaling operations. No off-the-shelf GUI application is used, so there are no GUI click-through screenshots or hidden GUI parameters.

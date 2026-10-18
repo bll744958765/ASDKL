@@ -40,6 +40,7 @@ def main():
     parser.add_argument("--datasets", nargs="+", default=["synthetic", "lucas", "pm25", "california"])
     parser.add_argument("--seeds", nargs="+", type=int, default=[1042, 1052, 1062, 1072, 1082])
     parser.add_argument("--device", default="cuda")
+    parser.add_argument("--data-root", type=Path, default=Path(__file__).resolve().parents[4] / "data")
     parser.add_argument("--reevaluate", action="store_true",
                         help="Reload selected checkpoints and recompute metrics without training")
     parser.add_argument("--output-dir", type=Path, required=True)
@@ -88,7 +89,7 @@ def main():
                         str(runner),
                         "--dataset", dataset,
                         "--seed", str(seed),
-                        "--device", args.device,
+                        "--device", args.device, "--data-root", str(args.data_root),
                         "--output-dir", str(out),
                         *base,
                         *override,

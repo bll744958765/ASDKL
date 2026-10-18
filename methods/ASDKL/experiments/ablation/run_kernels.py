@@ -32,6 +32,7 @@ def main():
     parser.add_argument("--datasets", nargs="+", default=["synthetic", "pm25", "lucas_large", "california"])
     parser.add_argument("--seeds", nargs="+", type=int, default=[1042, 1052, 1062, 1072, 1082])
     parser.add_argument("--device", default="cuda")
+    parser.add_argument("--data-root", type=Path, default=Path(__file__).resolve().parents[4] / "data")
     parser.add_argument("--reevaluate", action="store_true",
                         help="Reload completed checkpoints and recompute predictions/metrics")
     parser.add_argument("--output-dir", type=Path, required=True)
@@ -49,7 +50,7 @@ def main():
                 if args.reevaluate or not result.exists() or completed_epochs(out, result) < 300:
                     command = [
                         sys.executable, str(runner), "--dataset", dataset,
-                        "--seed", str(seed), "--device", args.device,
+                        "--seed", str(seed), "--device", args.device, "--data-root", str(args.data_root),
                         "--output-dir", str(out),
                         "--epochs", "300", "--restore-best", "1",
                         "--neighbors", "64", "--freq-dim", "64", "--hidden-dim", "64",
@@ -72,5 +73,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-

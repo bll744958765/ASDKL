@@ -59,6 +59,7 @@ def main() -> None:
     parser.add_argument("--datasets", nargs="+", default=["synthetic", "california"])
     parser.add_argument("--seeds", nargs="+", type=int, default=[1042, 1052, 1062, 1072, 1082])
     parser.add_argument("--device", default="cuda")
+    parser.add_argument("--data-root", type=Path, default=Path(__file__).resolve().parents[4] / "data")
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--families", nargs="+", choices=list(LEVELS), default=list(LEVELS))
     parser.add_argument("--include-default", type=int, choices=[0, 1], default=1)
@@ -112,7 +113,7 @@ def main() -> None:
                         str(runner),
                         "--dataset", dataset,
                         "--seed", str(seed),
-                        "--device", args.device,
+                        "--device", args.device, "--data-root", str(args.data_root),
                         "--output-dir", str(out),
                         "--neighbors", str(cfg["neighbors"]),
                         "--freq-dim", str(cfg["freq_dim"]),
