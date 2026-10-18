@@ -10,7 +10,7 @@ import numpy as np
 from scipy.stats import norm
 
 
-RESULTS = Path(__file__).resolve().parents[1] / "results" / "revision14_shared_relation" / "six_block_reference"
+RESULTS = Path(__file__).resolve().parents[1] / "results" / "asdkl_module_ablations" / "six_block_reference"
 OUT = Path(__file__).resolve().parents[1] / "results" / "generated_figures"
 OUT.mkdir(parents=True, exist_ok=True)
 SEEDS = (1042, 1052, 1062, 1072, 1082)

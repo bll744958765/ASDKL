@@ -16,10 +16,10 @@ import pandas as pd
 from scipy.stats import t
 
 ROOT = Path(__file__).resolve().parents[1]
-STRUCT = ROOT / "results" / "revision14_shared_relation"
-KERNEL = ROOT / "results" / "revision14_kernel_variants"
-SENS = ROOT / "results" / "revision14_sensitivity"
-OUT = ROOT / "results" / "revision14_summary"
+STRUCT = ROOT / "results" / "asdkl_module_ablations"
+KERNEL = ROOT / "results" / "asdkl_kernel_ablations"
+SENS = ROOT / "results" / "asdkl_sensitivity"
+OUT = ROOT / "results" / "asdkl_ablation_summaries"
 FIG = ROOT / "results" / "generated_figures"
 OUT.mkdir(parents=True, exist_ok=True)
 FIG.mkdir(parents=True, exist_ok=True)
@@ -98,17 +98,17 @@ seed_colors = dict(zip(SEEDS, ["#4878A8", "#6F9E75", "#D19A4A", "#9B77B4", "#C66
 
 # Figure 6: paired seed-level percentage changes relative to complete ASDKL.
 labels = {
-    "six_block_reference": "Complete ASDKL",
-    "independent_frequencies": "Independent neighbour frequencies",
-    "no_relation_encoder": "Without relative-relation encoder",
-    "no_context": "Without local context",
-    "no_fourier": "Without adaptive Fourier features",
-    "no_spectral_regularization": "Without spectral regularization",
-    "no_spectral_attention": "Without spectral attention",
-    "no_gp": "Without residual GP",
-    "no_residual_connections": "Without residual connections",
-    "three_residual_blocks": "Three residual blocks",
-    "auxiliary_mse": "With auxiliary MSE",
+    "six_block_reference": "Full ASDKL",
+    "independent_frequencies": "Independent frequencies",
+    "no_relation_encoder": "No relation encoder",
+    "no_context": "No local context",
+    "no_fourier": "No adaptive Fourier",
+    "no_spectral_regularization": "No spectral regularization",
+    "no_spectral_attention": "No spectral attention",
+    "no_gp": "No residual GP",
+    "no_residual_connections": "No residual connections",
+    "three_residual_blocks": "3 residual blocks",
+    "auxiliary_mse": "+Auxiliary MSE",
 }
 ref = module[module.group.eq("six_block_reference")][["dataset", "seed", "rmse"]].rename(columns={"rmse": "ref_rmse"})
 paired = module.merge(ref, on=["dataset", "seed"])
@@ -141,7 +141,7 @@ for ext in ["pdf", "svg", "png", "tiff"]:
 plt.close(fig)
 
 # Appendix Figure C2: validation-only sensitivity with the default repeated
-# within each one-factor-at-a-time family. The legacy CSV name is retained.
+# within each one-factor-at-a-time family.
 families = ["neighbors", "freq_dim", "hidden_dim", "lambda_spectral", "lr", "epochs"]
 parts = []
 default = sens[sens.family.eq("default")][["dataset", "seed", "val_rmse"]].rename(columns={"val_rmse": "default_val_rmse"})
@@ -154,7 +154,7 @@ for family in families:
 ss = pd.concat(parts, ignore_index=True).merge(default, on=["dataset", "seed"])
 ss["value"] = pd.to_numeric(ss.value)
 ss["relative"] = ss.val_rmse / ss.default_val_rmse
-ss.to_csv(OUT / "figure7_source.csv", index=False)
+ss.to_csv(OUT / "appendix_c2_sensitivity_source.csv", index=False)
 summ = ss.groupby(["family", "value"], as_index=False).agg(mean=("relative", "mean"), sd=("relative", "std"), n=("seed", "count"))
 summ.to_csv(OUT / "sensitivity_summary.csv", index=False)
 titles = {"neighbors": "Spatial neighbours $K$", "freq_dim": "Frequency dimension $M$",

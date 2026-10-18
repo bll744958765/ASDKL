@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 
-class SFNPLoss(nn.Module):
+class ASDKLLoss(nn.Module):
 
     def __init__(
 

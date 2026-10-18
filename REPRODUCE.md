@@ -37,8 +37,8 @@ python experiments/summarize_main_tables.py
 Figure 2 (synthetic generator) does not require model training; the following command generates its source CSV from seed 1042. Figures 3–4 use held-out test predictions from the **six-block reference** at seed 1042. Train that reference before the spatial source-data command:
 
 ```bash
-python experiments/run_ablations.py --configurations six_block_reference --data-root data --output-dir results/revision14_shared_relation --device cuda
-python experiments/make_spatial_figures_epoch300.py --figure all --data-root data
+python experiments/run_ablations.py --configurations six_block_reference --data-root data --output-dir results/asdkl_module_ablations --device cuda
+python experiments/prepare_spatial_figure_sources.py --figure all --data-root data
 ```
 
 The second command creates `results/spatial_figure_source_data/` with the synthetic field, LUCAS held-out observations/ASDKL/HistGBR predictions, and California held-out observations/ASDKL predictions. The plotting notebook reads these files and exports `synthetic_field_visualization_epoch300`, `lucas_full_asdkl_histgbr_comparison_epoch300`, and `california_full_spatial_visualization_epoch300`. Figure 2 displays a 1,000-location synthetic realization; panel (c) uses the 1st–99th percentile colour range stated in the caption. Spatial colour limits are only for display; all Table 1–3 metrics use original, unclipped predictions and responses.
@@ -58,13 +58,13 @@ The first command fixes grouped-location validation/test partitions per seed and
 Complete the structural/module, kernel, and sensitivity runs (the six-block reference already created above can be reused):
 
 ```bash
-python experiments/run_ablations.py --data-root data --output-dir results/revision14_shared_relation --device cuda
-python methods/ASDKL/experiments/ablation/run_kernels.py --data-root data --output-dir results/revision14_kernel_variants --device cuda
-python methods/ASDKL/experiments/ablation/run_sensitivity.py --data-root data --output-dir results/revision14_sensitivity --datasets synthetic --device cuda
-python experiments/summarize_revision14.py
+python experiments/run_ablations.py --data-root data --output-dir results/asdkl_module_ablations --device cuda
+python methods/ASDKL/experiments/ablation/run_kernels.py --data-root data --output-dir results/asdkl_kernel_ablations --device cuda
+python methods/ASDKL/experiments/ablation/run_sensitivity.py --data-root data --output-dir results/asdkl_sensitivity --datasets synthetic --device cuda
+python experiments/summarize_ablation_and_sensitivity.py
 ```
 
-`summarize_revision14.py` checks the expected per-seed run JSONs and writes `results/revision14_summary/`. **Table 5** uses `structural_ablation_summary.csv` (four datasets, five seeds, test RMSE). **Table 6** uses `kernel_summary.csv` (four datasets; RMSE, NLL, CRPS). **Figure 6** uses `figure6_source.csv`, paired by dataset and seed to the complete model. **Appendix C2** uses `sensitivity_summary.csv`, where the plotted ratio is validation RMSE divided by the same-seed default. **Appendix C1** reads `results/revision14_shared_relation/six_block_reference/synthetic/seed_*/synthetic_run.json` training histories and selected epochs directly. No test target is used in sensitivity-based selection.
+`summarize_ablation_and_sensitivity.py` checks the expected per-seed run JSONs and writes `results/asdkl_ablation_summaries/`. **Table 5** uses `structural_ablation_summary.csv` (four datasets, five seeds, test RMSE). **Table 6** uses `kernel_summary.csv` (four datasets; RMSE, NLL, CRPS). **Figure 6** uses `figure6_source.csv`, paired by dataset and seed to the complete model. **Appendix C2** uses `sensitivity_summary.csv`, where the plotted ratio is validation RMSE divided by the same-seed default. **Appendix C1** reads `results/asdkl_module_ablations/six_block_reference/synthetic/seed_*/synthetic_run.json` training histories and selected epochs directly. No test target is used in sensitivity-based selection.
 
 ### Generate every experimental figure, including vector files
 

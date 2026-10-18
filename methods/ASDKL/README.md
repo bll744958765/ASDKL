@@ -7,7 +7,7 @@
 - `asdkl.py`: shared-frequency target/neighbour encoding, relative relation encoder, spectral attention, gated aggregation, local anchor, and nonlinear mean;
 - `trend_network.py`: six residual mean blocks;
 - `spectral_gp.py`: representation-space RBF plus base-coordinate RBF residual covariance, full covariance prediction, and predictive-local inference;
-- `loss.py` and `train_sfnp_gp.py`: Gaussian objective, spectral regularization, checkpointing, and validation-MSE selection.
+- `loss.py` and `train_asdkl_gp.py`: Gaussian objective, spectral regularization, checkpointing, and validation-MSE selection.
 
 Formal defaults are 64 neighbours, 64 adaptive frequencies, representation width 64, mean width 128, six residual blocks, batch size 64, learning rate 0.003, spectral weight 0.1, and at most 300 epochs. All four complete datasets use seeds 1042, 1052, 1062, 1072, and 1082.
 

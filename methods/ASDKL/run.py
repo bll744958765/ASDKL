@@ -17,7 +17,7 @@ from asdkl import ASDKL
 from data_loader import SpatialNeighborhoodDataset, make_spatial_splits, preprocess_spatial_split
 from datasets import load_dataset
 from spectral_gp import SpectralGP
-from train_sfnp_gp import train_sfnp_gp
+from train_asdkl_gp import train_asdkl_gp
 
 
 def parse_args():
@@ -139,7 +139,7 @@ def main():
     if args.evaluate_only and resume_state is None:
         raise FileNotFoundError(
             f"--evaluate-only requires {training_state_path.name} or a legacy selected checkpoint")
-    history = train_sfnp_gp(model, gp, loaders["train"], optimizer, args.epochs, device,
+    history = train_asdkl_gp(model, gp, loaders["train"], optimizer, args.epochs, device,
                             args.lambda_gp, args.lambda_mse, args.lambda_spectral, args.objective,
                             val_loader=loaders["val"], restore_best=bool(args.restore_best),
                             checkpoint_path=training_state_path,

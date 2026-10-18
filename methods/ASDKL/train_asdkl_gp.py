@@ -4,9 +4,9 @@ from pathlib import Path
 import torch
 
 try:
-    from .loss import SFNPLoss
+    from .loss import ASDKLLoss
 except ImportError:  # Direct execution from methods/ASDKL.
-    from loss import SFNPLoss
+    from loss import ASDKLLoss
 
 
 def _save_training_state(path, epoch, model, gp_model, optimizer, history,
@@ -33,7 +33,7 @@ def _save_training_state(path, epoch, model, gp_model, optimizer, history,
     temporary.replace(path)
 
 
-def train_sfnp_gp(
+def train_asdkl_gp(
 
         model,
 
@@ -60,7 +60,7 @@ def train_sfnp_gp(
         checkpoint_every=25,
         resume_state=None):
 
-    criterion = SFNPLoss(
+    criterion = ASDKLLoss(
 
         lambda_gp=lambda_gp,
 
@@ -124,7 +124,7 @@ def train_sfnp_gp(
             optimizer.zero_grad()
 
             ################################################
-            # SFNP
+            # ASDKL training objective and residual GP update.
             ################################################
 
             outputs = model(

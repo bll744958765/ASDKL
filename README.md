@@ -49,8 +49,8 @@ python experiments/run_probabilistic_baselines.py --data-root data --output-dir 
 python experiments/summarize_main_tables.py
 
 # Figures 2–4: synthetic field and held-out LUCAS/California predictions
-python experiments/run_ablations.py --configurations six_block_reference --data-root data --output-dir results/revision14_shared_relation --device cuda
-python experiments/make_spatial_figures_epoch300.py --figure all --data-root data
+python experiments/run_ablations.py --configurations six_block_reference --data-root data --output-dir results/asdkl_module_ablations --device cuda
+python experiments/prepare_spatial_figure_sources.py --figure all --data-root data
 
 # Table 4 and Figure 5: EPA reduced-observation experiment
 python experiments/run_epa_sparse.py --data-root data --output-dir results/epa_sparse_fraction_fixedtest --device cuda --baseline-fraction 40
@@ -58,10 +58,10 @@ python scripts/run_epa_probabilistic_grid.py --data-root data --results-root res
 python experiments/summarize_epa_sparse_probabilistic.py
 
 # Tables 5–6, Figure 6, and Appendix Figures C1–C2: ablations and sensitivity
-python experiments/run_ablations.py --data-root data --output-dir results/revision14_shared_relation --device cuda
-python methods/ASDKL/experiments/ablation/run_kernels.py --data-root data --output-dir results/revision14_kernel_variants --device cuda
-python methods/ASDKL/experiments/ablation/run_sensitivity.py --data-root data --output-dir results/revision14_sensitivity --datasets synthetic --device cuda
-python experiments/summarize_revision14.py
+python experiments/run_ablations.py --data-root data --output-dir results/asdkl_module_ablations --device cuda
+python methods/ASDKL/experiments/ablation/run_kernels.py --data-root data --output-dir results/asdkl_kernel_ablations --device cuda
+python methods/ASDKL/experiments/ablation/run_sensitivity.py --data-root data --output-dir results/asdkl_sensitivity --datasets synthetic --device cuda
+python experiments/summarize_ablation_and_sensitivity.py
 
 # Generate experimental Figures 2–6 and Appendix Figures C1–C2
 jupyter nbconvert --to notebook --execute figure/all_manuscript_figures.ipynb --output all_manuscript_figures_executed.ipynb --output-dir results
@@ -72,14 +72,14 @@ jupyter nbconvert --to notebook --execute figure/all_manuscript_figures.ipynb --
 | Tables 1–2 | `results/main_table_summaries/point_prediction_summary.csv`; select synthetic/EPA for Table 1 and LUCAS/California for Table 2. |
 | Table 3 | `results/main_table_summaries/probabilistic_prediction_summary.csv`. |
 | Table 4 | `results/epa_sparse_fraction_fixedtest/probabilistic_comparison_10_60_summary.csv`. |
-| Table 5 | `results/revision14_summary/structural_ablation_summary.csv`. |
-| Table 6 | `results/revision14_summary/kernel_summary.csv`. |
+| Table 5 | `results/asdkl_ablation_summaries/structural_ablation_summary.csv`. |
+| Table 6 | `results/asdkl_ablation_summaries/kernel_summary.csv`. |
 | Figure 1 | Architecture schematic; no experiment output or notebook cell is needed. |
 | Figures 2–4 | `results/spatial_figure_source_data/` from the synthetic/LUCAS/California source-data script, then the notebook. |
 | Figure 5 | `results/epa_sparse_fraction_fixedtest/asdkl_fraction_results.csv`, then the notebook. |
-| Figure 6 | `results/revision14_summary/figure6_source.csv`, then the notebook. |
-| Appendix Figure C1 | Five `synthetic_run.json` training histories under `results/revision14_shared_relation/six_block_reference/synthetic/`, then the notebook. |
-| Appendix Figure C2 | `results/revision14_summary/sensitivity_summary.csv`, then the notebook. |
+| Figure 6 | `results/asdkl_ablation_summaries/figure6_source.csv`, then the notebook. |
+| Appendix Figure C1 | Five `synthetic_run.json` training histories under `results/asdkl_module_ablations/six_block_reference/synthetic/`, then the notebook. |
+| Appendix Figure C2 | `results/asdkl_ablation_summaries/sensitivity_summary.csv`, then the notebook. |
 
 The checked-in notebook includes seven displayed figure previews for Figures 2–6 and C1–C2, so GitHub can show the figures immediately. To **reproduce** them after cloning, run the experiments above and execute all notebook cells. Keep `results/` local; do not upload its CSVs, run JSONs, plots, checkpoints, or logs. See [REPRODUCE.md](REPRODUCE.md) for the exact dataset fields, splits, metrics, model settings and expected output names.
 
