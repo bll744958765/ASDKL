@@ -29,6 +29,8 @@ def main() -> None:
         part = args.results_root / f"fraction_{fraction}"
         split_dir = part / "splits"
         for seed in SEEDS:
+            # Reuse the ASDKL split for all comparators at this fraction and
+            # seed so Table 4 evaluates the same held-out locations.
             split = split_dir / f"seed_{seed}.npz"
             if not split.exists():
                 raise FileNotFoundError(f"Run experiments/run_epa_sparse.py first: {split}")

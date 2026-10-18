@@ -26,6 +26,7 @@ CONFIGS = {
 
 
 def completed_epochs(out: Path, result: Path) -> int:
+    # A result JSON alone does not establish that a partial run completed.
     history_path = out / "training_history.json"
     if history_path.exists():
         history = json.loads(history_path.read_text(encoding="utf-8"))
@@ -70,6 +71,8 @@ def main():
     ]
     rows = []
     for configuration in args.configurations:
+        # Each variant inherits the frozen protocol and changes only the
+        # listed flags, preserving matched datasets, seeds, and splits.
         override = CONFIGS[configuration]
         for dataset in args.datasets:
             for seed in args.seeds:

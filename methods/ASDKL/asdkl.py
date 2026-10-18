@@ -301,6 +301,8 @@ class ASDKL(nn.Module):
 
         neural_mu = self.trend_net(h)
         if self.local_anchor:
+            # This distance-weighted response anchor contributes to the mean;
+            # it is separate from the residual GP covariance.
             distance = torch.linalg.vector_norm(neigh_s - s.unsqueeze(1), dim=-1)
             temperature = torch.nn.functional.softplus(self.log_anchor_temperature) + 1e-3
             local_weight = torch.softmax(-distance / temperature, dim=1)
@@ -326,6 +328,8 @@ class ASDKL(nn.Module):
 
             "gamma": gamma_center,
 
+            # The GP consumes target-level features; observed residuals enter
+            # its likelihood separately during fitting.
             "kernel_feature": torch.cat([gamma_center, h], dim=-1),
 
             "omega": omega,

@@ -39,12 +39,15 @@ def fit_gp(coord_train, residual_train, coord_val, target_val, trend_val,
     eye = torch.eye(len(tr), device=device)
     best = None
     def stable_cholesky(signal, diagonal_noise):
+        # Increase only numerical jitter when a covariance factorization fails;
+        # the candidate noise level remains the one being validated.
         for jitter in (1e-6, 1e-5, 1e-4, 1e-3, 1e-2):
             chol, info = torch.linalg.cholesky_ex(
                 signal + (diagonal_noise + jitter) * eye)
             if int(info.max()) == 0:
                 return chol
         raise RuntimeError("Matérn covariance remained non-positive-definite after jitter escalation")
+    # Select covariance settings on validation error, never on test targets.
     for lengthscale in (0.1, 0.2, 0.35, 0.5, 0.75, 1.0, 1.5, 2.0,
                         3.0, 4.0, 6.0, 8.0, 12.0, 16.0):
         signal = matern32(tr, tr, lengthscale)

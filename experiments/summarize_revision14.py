@@ -1,3 +1,9 @@
+"""Summarize completed ablation runs for Tables 5–6 and Figure 6/C2.
+
+Inputs are per-seed run records under ``results/``; this script does not train
+models or contain manuscript result values. The notebook is the canonical
+submission-figure renderer.
+"""
 from __future__ import annotations
 
 import json
@@ -64,6 +70,8 @@ aggregate(module, ["dataset", "group"]).to_csv(OUT / "module_ablation_summary.cs
 
 kernel_groups = ["representation_rbf_plus_matern32", "representation_rbf_only", "matern32_only"]
 kernels = load_runs(KERNEL, kernel_groups, DATASETS)
+# The complete main run already has the default additive RBF configuration;
+# reuse its matched seed records instead of running an identical model twice.
 selected = main.copy()
 selected["group"] = "representation_rbf_plus_base_rbf"
 kernels = pd.concat([kernels, selected], ignore_index=True)
@@ -132,7 +140,8 @@ for ext in ["pdf", "svg", "png", "tiff"]:
                 bbox_inches="tight", facecolor="white")
 plt.close(fig)
 
-# Figure 7: validation-only sensitivity, five seeds, default inserted per family.
+# Appendix Figure C2: validation-only sensitivity with the default repeated
+# within each one-factor-at-a-time family. The legacy CSV name is retained.
 families = ["neighbors", "freq_dim", "hidden_dim", "lambda_spectral", "lr", "epochs"]
 parts = []
 default = sens[sens.family.eq("default")][["dataset", "seed", "val_rmse"]].rename(columns={"val_rmse": "default_val_rmse"})

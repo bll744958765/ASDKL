@@ -15,6 +15,7 @@ PROB_METRICS = ("nll", "crps", "picp90", "mpiw90")
 
 
 def require_complete(frame: pd.DataFrame, methods: int, label: str) -> None:
+    # Reject missing or duplicate run rows before computing table means.
     expected = len(DATASETS) * len(SEEDS) * methods
     if len(frame) != expected:
         raise ValueError(f"{label}: expected {expected} runs, found {len(frame)}")
@@ -24,6 +25,7 @@ def require_complete(frame: pd.DataFrame, methods: int, label: str) -> None:
 
 
 def summarize(frame: pd.DataFrame, metrics: tuple[str, ...], output: Path, stem: str) -> None:
+    # Preserve per-seed values; pandas std reports sample SD (ddof=1).
     source = frame[["dataset", "method", "seed", *metrics]].copy()
     source.to_csv(output / f"{stem}_source.csv", index=False)
     summary = source.groupby(["dataset", "method"], sort=False)[list(metrics)].agg(["mean", "std"])

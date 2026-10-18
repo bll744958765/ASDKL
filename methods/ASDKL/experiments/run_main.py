@@ -48,6 +48,8 @@ def main() -> None:
             if args.data_root is not None:
                 command += ["--data-root", str(args.data_root)]
             if full_data:
+                # Large datasets use local neighbour conditioning at inference;
+                # moderate-size benchmarks retain exact GP inference.
                 command += ["--gp-inference", "nngp", "--gp-neighbors", "32"]
             else:
                 command += ["--gp-inference", "exact"]

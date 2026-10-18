@@ -41,6 +41,8 @@ def main():
     runner = Path(__file__).resolve().parents[1] / "run.py"
     rows = []
     for kernel_name in args.kernels:
+        # Only these two switches vary; all other training settings match
+        # the complete-model reference used for the kernel comparison.
         representation_kernel, base_kernel = KERNELS[kernel_name]
         for dataset in args.datasets:
             for seed in args.seeds:

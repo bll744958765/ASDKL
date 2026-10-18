@@ -25,6 +25,8 @@ class SpatialNeighborhoodDataset(Dataset):
         query_k = min(k + int(exclude_self), len(ref_s))
         distances, indices = KDTree(ref_s).query(np.asarray(coordinates), k=query_k)
         if exclude_self:
+            # Remove the query's actual training index: duplicated coordinates
+            # can make KDTree's nearest match different from the query itself.
             if query_reference_indices is None:
                 raise ValueError(
                     "query_reference_indices is required when exclude_self=True; "

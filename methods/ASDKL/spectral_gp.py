@@ -255,6 +255,10 @@ class KernelNetwork(nn.Module):
 
 
 class SpectralGP(nn.Module):
+    """Residual covariance from additive learned and base kernels.
+
+    Residual values enter the likelihood and posterior, not the feature map.
+    """
 
     def __init__(
             self,
@@ -337,6 +341,7 @@ class SpectralGP(nn.Module):
         return sigma.square() * (1.0 + scaled) * torch.exp(-scaled)
 
     def combined_cross_covariance(self, gamma1, gamma2, coords1=None, coords2=None):
+        # Combine both covariance components before posterior conditioning.
         if self.representation_kernel:
             covariance = self.cross_covariance(gamma1, gamma2)
         else:
