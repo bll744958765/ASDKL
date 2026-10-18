@@ -2,7 +2,7 @@
 
 This repository contains runnable code for **all experiments reported in the ASDKL manuscript**: ASDKL, 13 matched point-prediction baselines, three probabilistic kriging comparisons, the EPA observation-density study, structural and kernel ablations, sensitivity and convergence analyses, and table/figure generation. The KCN, PE-GNN, 4N, and DeepKriging comparators are the **adaptations described in the manuscript**, not unmodified upstream packages. See [REPRODUCE.md](REPRODUCE.md) for exact Table 1–6 and Figure 2–6/C1–C2 instructions.
 
-**No new numeric experimental result files, raw datasets, trained checkpoints, logs, or generated experimental plot files are included in this update. To obtain the manuscript results, run the code yourself.** Figure 1 is an architecture schematic and is not included in the plotting notebook or this update. The notebook stores previews for Figures 2–6 and C1–C2 so that their layouts can be inspected; it writes PDF/SVG/PNG files when run. Results may differ slightly because of computer hardware, CUDA/PyTorch and other software versions, numerical libraries, and stochastic execution; such variation is normal. Use the stated seeds and protocol for the closest comparison.
+**The current repository contains no separate numeric experimental results, raw datasets, trained checkpoints, logs, or generated manuscript plot files. To obtain the manuscript results, run the code yourself.** The retained `docs/synthetic_example.png` is a standalone synthetic-data example, not a manuscript experiment result; regenerate it with `python examples/generate_synthetic_example.py`. Figure 1 is an architecture schematic and is not included in the plotting notebook. The notebook stores embedded previews for Figures 2–6 and C1–C2 so that their layouts can be inspected; it writes PDF/SVG/PNG files when run. Results may differ slightly because of computer hardware, CUDA/PyTorch and other software versions, numerical libraries, and stochastic execution; such variation is normal. Use the stated seeds and protocol for the closest comparison.
 
 ## Setup
 
@@ -14,7 +14,7 @@ conda activate asdkl
 python -m unittest discover -s tests -v
 ```
 
-The synthetic dataset is generated locally. For a fresh reproduction, obtain EPA AirData 2023, LUCAS 2018 topsoil, and California housing source data and place them as specified in [data/README.md](data/README.md). This update does not add dataset files.
+The synthetic dataset is generated locally. For a fresh reproduction, obtain EPA AirData 2023, LUCAS 2018 topsoil, and California housing source data and place them as specified in [data/README.md](data/README.md). Dataset files are not included in the current repository.
 
 Quick CPU check:
 
