@@ -6,6 +6,8 @@ Run every command from the repository root. The canonical figure workflow is the
 
 The current manuscript has **six numbered tables, six numbered figures, and two appendix figures (C1 and C2)**. The older generic item ranges in the editor's letter are examples, not the current numbering. All commands below are run from the repository root. `results/` is generated locally and is excluded from the upload package. Use a single Python environment and keep the five default seeds: `1042 1052 1062 1072 1082`. A GPU is recommended for the 300-epoch model runs; replace `cuda` with `cpu` if needed. The CPU choice changes speed, not the named workflow.
 
+**Entry-point rule:** `methods/ASDKL/experiments/run_main.py` launches the main ASDKL benchmark (Tables 1–3) and calls `methods/ASDKL/run.py` for each dataset and seed. `methods/ASDKL/asdkl.py` defines the model and is not run directly. The EPA sparse-observation manuscript workflow begins with the repository-root `experiments/run_epa_sparse.py`; the similarly named runner under `methods/ASDKL/experiments/sparse_observations/` is ASDKL-only and does not produce the full Table 4 comparison. See the experiment-to-file table in [README.md](README.md), then use the exact command chains below.
+
 ### 0. Source data and validation
 
 1. Create the environment: `conda env create -f environment.yml`, then `conda activate asdkl`. Alternatively install `requirements.txt` and `notebook`, `nbclient`, `ipykernel` into Python 3.9+.
@@ -34,7 +36,7 @@ python experiments/summarize_main_tables.py
 
 ### Figures 2–4: synthetic and held-out spatial panels
 
-Figure 2 (synthetic generator) does not require model training; the following command generates its source CSV from seed 1042. Figures 3–4 use held-out test predictions from the **six-block reference** at seed 1042. Train that reference before the spatial source-data command:
+Figure 2 (synthetic generator) does not require model training. To generate its source CSV from seed 1042, run `python experiments/prepare_spatial_figure_sources.py --figure synthetic --data-root data`. Figures 3–4 use held-out test predictions from the **six-block reference** at seed 1042. Train that reference before generating their spatial source data:
 
 ```bash
 python experiments/run_ablations.py --configurations six_block_reference --data-root data --output-dir results/asdkl_module_ablations --device cuda

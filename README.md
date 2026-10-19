@@ -4,6 +4,27 @@ This repository contains runnable code for **all experiments reported in the ASD
 
 **The current repository contains no separate numeric experimental results, trained checkpoints, logs, or generated manuscript plot files. To obtain the manuscript results, run the code yourself.** Three original input-data files are retained under `data/`; see [data/README.md](data/README.md) for the paths required by the loaders. The retained `docs/synthetic_example.png` is a standalone synthetic-data example, not a manuscript experiment result; regenerate it with `python examples/generate_synthetic_example.py`. Figure 1 is an architecture schematic and is not included in the plotting notebook. The notebook stores embedded previews for Figures 2–6 and C1–C2 so that their layouts can be inspected; it writes PDF/SVG/PNG files when run. Results may differ slightly because of computer hardware, CUDA/PyTorch and other software versions, numerical libraries, and stochastic execution; such variation is normal. Use the stated seeds and protocol for the closest comparison.
 
+## Which ASDKL Python file should I run?
+
+Run commands from the **repository root** in a terminal; do not double-click a `.py` file. For the manuscript's main ASDKL results (Tables 1–3), run `methods/ASDKL/experiments/run_main.py`. This script runs the model on the four datasets with the five stated seeds and calls `methods/ASDKL/run.py` for each individual run. For a single dataset/seed or a quick check, run `methods/ASDKL/run.py` directly. `methods/ASDKL/asdkl.py` defines the model; it is **not** an experiment entry point.
+
+The `methods/ASDKL/experiments/sparse_observations/` folder is for the **EPA reduced-observation study**, not the main benchmark. To reproduce manuscript Figure 5 and Table 4, follow the complete command chain below starting with the repository-level `experiments/run_epa_sparse.py`; the similarly named script inside `methods/ASDKL/experiments/sparse_observations/` is an ASDKL-only runner, and `summarize_epa_sparse_fraction.py` summarizes its existing outputs. Neither replaces the full Figure 5/Table 4 workflow.
+
+| Manuscript experiment | Run these files from the repository root, in order | Final result |
+|---|---|---|
+| Tables 1–2: point prediction on four datasets | `methods/ASDKL/experiments/run_main.py` (ASDKL); `experiments/run_baselines.py` (13 comparators); `experiments/summarize_main_tables.py` | `results/main_table_summaries/point_prediction_summary.csv` |
+| Table 3: probabilistic prediction | Reuse the ASDKL runs above; run `experiments/run_probabilistic_baselines.py`; then `experiments/summarize_main_tables.py` | `results/main_table_summaries/probabilistic_prediction_summary.csv` |
+| Figure 2: synthetic field | `experiments/prepare_spatial_figure_sources.py --figure synthetic`; then the Figure 2 cell of `figure/all_manuscript_figures.ipynb` after its data sources are available | Figure 2 plot (no model training required) |
+| Figures 3–4: spatial predictions | `experiments/run_ablations.py --configurations six_block_reference`; then `experiments/prepare_spatial_figure_sources.py --figure all`; then the figure notebook | LUCAS and California plots |
+| Figure 5: EPA observation density | `experiments/run_epa_sparse.py`; then the figure notebook | EPA learning-curve plot |
+| Table 4: EPA probabilistic comparison | `experiments/run_epa_sparse.py`; `scripts/run_epa_probabilistic_grid.py`; `experiments/summarize_epa_sparse_probabilistic.py` | `results/epa_sparse_fraction_fixedtest/probabilistic_comparison_10_60_summary.csv` |
+| Table 5 and Figure 6: structural ablations | `experiments/run_ablations.py`; `experiments/summarize_ablation_and_sensitivity.py`; then the figure notebook for Figure 6 | Structural summary and paired-ablation plot |
+| Table 6: residual covariance kernels | `methods/ASDKL/experiments/ablation/run_kernels.py`; `experiments/summarize_ablation_and_sensitivity.py` | `results/asdkl_ablation_summaries/kernel_summary.csv` |
+| Appendix Figure C1: convergence | `experiments/run_ablations.py --configurations six_block_reference`; then the figure notebook | Convergence plot from the training histories |
+| Appendix Figure C2: sensitivity | `methods/ASDKL/experiments/ablation/run_sensitivity.py`; `experiments/summarize_ablation_and_sensitivity.py`; then the figure notebook | Sensitivity plot |
+
+The table identifies **files**, not complete command lines: use the commands and shared output directories in [REPRODUCE.md](REPRODUCE.md) or below. Figure 1 is the architecture drawing and needs no experiment script. The notebook draws figures from newly generated local results; it does not train the models. `__init__.py` files are package markers, and the other `.py` files under `methods/ASDKL/` implement components called by the runners.
+
 ## Setup
 
 Python 3.9 and `environment.yml` were used during development. Select the PyTorch build appropriate for your hardware.
