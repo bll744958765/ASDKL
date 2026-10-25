@@ -48,6 +48,11 @@ def main() -> None:
         for seed in SEEDS:
             path = args.asdkl_dir / dataset / f"seed_{seed}" / f"{dataset}_run.json"
             row = json.loads(path.read_text(encoding="utf-8"))
+            expected_mode = "exact" if dataset in ("synthetic", "pm25") else "predictive_local"
+            if row.get("gp_inference") != expected_mode:
+                raise ValueError(f"{path}: expected {expected_mode} residual inference")
+            if expected_mode == "exact" and row.get("gp_refine_steps_applied") != 30:
+                raise ValueError(f"{path}: expected 30 full-covariance refinement steps")
             records.append({"dataset": dataset, "seed": seed, "method": "ASDKL", **row})
     asdkl = pd.DataFrame(records)
     require_complete(asdkl, 1, "ASDKL")

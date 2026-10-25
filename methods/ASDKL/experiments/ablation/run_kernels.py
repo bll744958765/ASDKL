@@ -64,6 +64,8 @@ def main():
                         "--residual-ensemble", "0", "--local-expert", "0",
                         "--covariate-expert", "0",
                     ]
+                    if dataset == "synthetic":
+                        command += ["--gp-inference", "exact"]
                     status = "ok" if subprocess.run(command, check=False).returncode == 0 else "failed"
                 row = {"kernel": kernel_name, "dataset": dataset, "seed": seed, "status": status}
                 if result.exists():

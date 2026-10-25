@@ -133,6 +133,8 @@ def main() -> None:
                         "--residual-ensemble", "0", "--local-expert", "0",
                         "--covariate-expert", "0",
                     ]
+                    if dataset == "synthetic":
+                        command += ["--gp-inference", "exact"]
                     if args.reevaluate:
                         command += ["--evaluate-only", "1"]
                     status = "ok" if subprocess.run(command, check=False).returncode == 0 else "failed"

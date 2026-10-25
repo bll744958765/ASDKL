@@ -26,7 +26,7 @@ python experiments/run_probabilistic_baselines.py --data-root data --output-dir 
 python experiments/summarize_main_tables.py
 ```
 
-`run_main.py` trains ASDKL for up to 300 epochs on four datasets and five seeds, retaining the validation-MSE-selected checkpoint. `run_baselines.py` fits the **13 point-prediction comparators** on identical seed/split settings. `run_probabilistic_baselines.py` fits SimpleKriging, RegressionKriging, and RFKriging with validation-based covariance/variance settings. `summarize_main_tables.py` fails if a dataset/method lacks a seed. It writes `results/main_table_summaries/point_prediction_source.csv`, `point_prediction_summary.csv`, `probabilistic_prediction_source.csv`, and `probabilistic_prediction_summary.csv`.
+`run_main.py` trains ASDKL for up to 300 epochs on four datasets and five seeds, retaining the validation-MSE-selected checkpoint. The 3,000-point synthetic and EPA runs explicitly use full residual-covariance inference and refine covariance hyperparameters on all training residuals after checkpoint selection; LUCAS and California use predictive-local inference. The synthetic full calculation uses 2,100 training observations and can require more GPU memory and time than the local mode. `run_baselines.py` fits the **13 point-prediction comparators** on identical seed/split settings. `run_probabilistic_baselines.py` fits SimpleKriging, RegressionKriging, and RFKriging with validation-based covariance/variance settings. `summarize_main_tables.py` fails if a dataset/method lacks a seed. It writes `results/main_table_summaries/point_prediction_source.csv`, `point_prediction_summary.csv`, `probabilistic_prediction_source.csv`, and `probabilistic_prediction_summary.csv`.
 
 | Manuscript item | Rows and metrics to use from the generated summary |
 |---|---|
@@ -67,6 +67,8 @@ python experiments/summarize_ablation_and_sensitivity.py
 ```
 
 `summarize_ablation_and_sensitivity.py` checks the expected per-seed run JSONs and writes `results/asdkl_ablation_summaries/`. **Table 5** uses `structural_ablation_summary.csv` (four datasets, five seeds, test RMSE). **Table 6** uses `kernel_summary.csv` (four datasets; RMSE, NLL, CRPS). **Figure 6** uses `figure6_source.csv`, paired by dataset and seed to the complete model. **Appendix C2** uses `sensitivity_summary.csv`, where the plotted ratio is validation RMSE divided by the same-seed default. **Appendix C1** reads `results/asdkl_module_ablations/six_block_reference/synthetic/seed_*/synthetic_run.json` training histories and selected epochs directly. No test target is used in sensitivity-based selection.
+
+For the corrected nonstationary synthetic analysis, run the Table 1–3 chain and the Figure 6/Tables 5–6/C1–C2 chain above from a clean checkout without older generated `results/` files. The synthetic runners explicitly request `--gp-inference exact`; they refine covariance parameters for 30 steps using all 2,100 training residuals after selecting the neural checkpoint. Each generated run JSON records `gp_inference` and `gp_refine_steps_applied`. The two table summarizers reject stale predictive-local synthetic records. The `no_gp` ablation correctly records `gp_inference=none` and zero refinement steps. All records, summaries, checkpoints, and generated figures remain local under the ignored `results/` directory.
 
 ### Generate every experimental figure, including vector files
 

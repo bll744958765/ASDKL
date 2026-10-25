@@ -159,9 +159,15 @@ def main():
     base_va = torch.as_tensor(np.c_[S[iva], X[iva]], dtype=torch.float32, device=device)
     base_te = torch.as_tensor(np.c_[S[ite], X[ite]], dtype=torch.float32, device=device)
     # Mini-batch GP likelihoods are scalable but can bias global length-scales.
-    # For moderate samples, refine only covariance hyperparameters against the
+    # Under exact inference, refine only covariance hyperparameters against the
     # full frozen training residual vector before evaluating the posterior.
-    if args.ablation != "no_gp" and len(ga_tr) <= 2000 and args.gp_refine_steps > 0:
+    refine_full_covariance = (
+        args.ablation != "no_gp"
+        and args.gp_refine_steps > 0
+        and (args.gp_inference == "exact"
+             or (args.gp_inference == "auto" and len(ga_tr) <= 2000))
+    )
+    if refine_full_covariance:
         for parameter in gp.kernel_net.parameters():
             parameter.requires_grad_(False)
         scalar_parameters = [gp.log_sigma_f, gp.log_sigma_coord,
@@ -583,7 +589,9 @@ def main():
                "objective": args.objective,
                "checkpoint_selection": "minimum validation MSE" if args.restore_best else "final epoch",
                "resume_mode": resume_mode,
-               "gp_inference": "predictive_local" if (args.gp_inference == "nngp" or (args.gp_inference == "auto" and len(itr) > 2000)) else "exact",
+               "gp_inference": "none" if args.ablation == "no_gp" else (
+                   "predictive_local" if (args.gp_inference == "nngp" or (args.gp_inference == "auto" and len(itr) > 2000)) else "exact"),
+               "gp_refine_steps_applied": args.gp_refine_steps if refine_full_covariance else 0,
                "n": len(y), "train": len(itr), "validation": len(iva), "test": len(ite),
                "test_fraction": args.test_size, "validation_fraction": args.val_size,
                **history, **metrics}

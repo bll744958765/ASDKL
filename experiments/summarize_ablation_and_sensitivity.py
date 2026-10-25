@@ -38,6 +38,15 @@ def load_runs(root: Path, groups: list[str], datasets: list[str]) -> pd.DataFram
                 if not path.exists():
                     raise FileNotFoundError(path)
                 item = json.loads(path.read_text(encoding="utf-8"))
+                if group == "no_gp":
+                    expected_mode, expected_steps = "none", 0
+                elif dataset in ("synthetic", "pm25"):
+                    expected_mode, expected_steps = "exact", 30
+                else:
+                    expected_mode, expected_steps = "predictive_local", 0
+                if (item.get("gp_inference") != expected_mode or
+                        item.get("gp_refine_steps_applied") != expected_steps):
+                    raise ValueError(f"{path}: incorrect residual inference or refinement")
                 rows.append({"group": group, "dataset": dataset, "seed": seed,
                              **{m: float(item[m]) for m in METRICS}})
     return pd.DataFrame(rows)
@@ -81,6 +90,9 @@ aggregate(kernels, ["dataset", "group"]).to_csv(OUT / "kernel_summary.csv", inde
 # Add the already completed default main run to the sensitivity source.
 sens = pd.read_csv(SENS / "sensitivity_results.csv")
 sens = sens[sens.status.eq("ok")].copy()
+if (not sens.gp_inference.eq("exact").all() or
+        not sens.gp_refine_steps_applied.eq(30).all()):
+    raise ValueError("Synthetic sensitivity results require full-covariance inference")
 defaults = main[main.dataset.eq("synthetic")].copy()
 for key, value in {"family": "default", "value": "default", "neighbors": 64,
                    "freq_dim": 64, "hidden_dim": 64, "lambda_spectral": .1,
