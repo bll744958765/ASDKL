@@ -56,7 +56,7 @@ The default evaluation seeds are 1042, 1052, 1062, 1072, and 1082. Complete data
 
 **Protocol distinction:** point-prediction kriging uses fixed settings (64 neighbours, Matérn-3/2 length scale 0.65, nugget 0.10). The separate probabilistic experiment selects length scale and noise using validation data and calibrates predictive variance on validation residuals. Do not mix the two result sets.
 
-Detailed commands, original-data paths, the complete experiment-to-table/figure map, and metric definitions are in [REPRODUCE.md](REPRODUCE.md). All coded figure panels are in [figure/all_manuscript_figures.ipynb](figure/all_manuscript_figures.ipynb). Run outputs go under the ignored `results/` directory. Generated values should be checked against the manuscript's means and standard deviations; the notebook's visible plots are not a substitute for running the experiments.
+Detailed commands, original-data paths, the complete experiment-to-table/figure map, and metric definitions are in [REPRODUCE.md](REPRODUCE.md). All coded figure panels are in [figure/all_manuscript_figures.ipynb](figure/all_manuscript_figures.ipynb). Run outputs go under the ignored `results/` directory. The checked-in notebook has no saved outputs; run the experiments and execute its cells locally to display and export the plots. Generated values should be checked against the manuscript's means and standard deviations.
 
 ## Reproduce each manuscript item
 
@@ -102,7 +102,7 @@ jupyter nbconvert --to notebook --execute figure/all_manuscript_figures.ipynb --
 | Appendix Figure C1 | Five `synthetic_run.json` training histories under `results/asdkl_module_ablations/six_block_reference/synthetic/`, then the notebook. |
 | Appendix Figure C2 | `results/asdkl_ablation_summaries/sensitivity_summary.csv`, then the notebook. |
 
-The checked-in notebook includes seven displayed figure previews for Figures 2–6 and C1–C2, so GitHub can show the figures immediately. To **reproduce** them after cloning, run the experiments above and execute all notebook cells. Keep `results/` local; do not upload its CSVs, run JSONs, plots, checkpoints, or logs. See [REPRODUCE.md](REPRODUCE.md) for the exact dataset fields, splits, metrics, model settings and expected output names.
+To **reproduce** Figures 2–6 and C1–C2 after cloning, run the experiments above and execute all notebook cells. The notebook displays the figures during execution and saves the exported files under `results/`. Keep `results/` local; do not upload its CSVs, run JSONs, plots, checkpoints, logs, or an executed notebook with embedded figure outputs. See [REPRODUCE.md](REPRODUCE.md) for the exact dataset fields, splits, metrics, model settings and expected output names.
 
 Public repository: https://github.com/bll744958765/ASDKL. A separate anonymized code package is used during double-anonymous review.
 
